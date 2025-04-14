@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -28,8 +29,8 @@ export default function CustomLink({ href, children, delay = 300 }: CustomLinkPr
   };
 
   return (
-    <a href={href} onClick={handleClick}>
+    <Link href={href} onClick={handleClick}>
       {children}
-    </a>
+    </Link>
   );
 }

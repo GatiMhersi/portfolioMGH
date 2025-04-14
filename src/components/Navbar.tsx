@@ -28,7 +28,7 @@ export default function Navbar() {
             <li key={item.href} className="hover:text-[#F2613F] transition-colors duration-300">
               <CustomLink
                 href={item.href}
-                
+                delay={0.6}
               >
                 {item.label}
               </CustomLink>
