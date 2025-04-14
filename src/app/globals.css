@@ -24,3 +24,34 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes pulse-glow {
+  0%, 100% {
+    background-size: 100% 100%;
+  }
+  50% {
+    background-size: 110% 110%;
+  }
+}
+
+.animate-pulse-glow {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
+@keyframes pulse-button {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-pulse-button {
+  animation: pulse-button 1.5s ease-in-out infinite;
+}
