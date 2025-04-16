@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "lucide-react": "^0.488.0",
-    "motion": "^12.6.3",
+    "motion": "^12.7.3",
     "next": "15.3.0",
     "portfolio": "file:",
     "react": "^19.0.0",

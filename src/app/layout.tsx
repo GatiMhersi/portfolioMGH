@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
-import PageTransitionWrapper from "../components/PageTransitionWrapper";
+import PageTransitionWrapper from "@/components/PageTransitionWrapper";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
+        
         <Navbar/>
         <PageTransitionWrapper>
           {children}
-        </PageTransitionWrapper>
+          </PageTransitionWrapper>
       </body>
     </html>
   );

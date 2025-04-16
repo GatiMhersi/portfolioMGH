@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import CustomLink from "./TransitionLink";
+import { useRouter } from "next/navigation";
 
 const navItems = [
   { label: "Inicio", href: "/" },
@@ -12,6 +12,19 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    href: string
+  ) => {
+    e.preventDefault();
+
+    setTimeout(() => {
+      router.push(href);
+    }, 500);
+  };
+
   return (
     <motion.nav
       initial={{ y: -80, opacity: 0 }}
@@ -25,13 +38,16 @@ export default function Navbar() {
         </Link>
         <ul className="flex gap-6 text-sm md:text-base font-medium text-white">
           {navItems.map((item) => (
-            <li key={item.href} className="hover:text-[#F2613F] transition-colors duration-300">
-              <CustomLink
+            <li
+              key={item.href}
+              className="hover:text-[#F2613F] transition-colors duration-300"
+            >
+              <Link
                 href={item.href}
-                delay={0.6}
+                onClick={(e) => handleClick(e, item.href)}
               >
                 {item.label}
-              </CustomLink>
+              </Link>
             </li>
           ))}
         </ul>

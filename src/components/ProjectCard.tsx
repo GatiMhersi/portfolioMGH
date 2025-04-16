@@ -3,7 +3,9 @@
 
 import { motion } from "motion/react";
 
-import CustomLink from "./TransitionLink";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ProjectCardProps {
   slug: string;
@@ -23,17 +25,31 @@ export default function ProjectCard({
   tecnologias = [],
   index = 0,
 }: ProjectCardProps) {
+   const router = useRouter();
+   
+  
+    const handleClick = (
+      e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+      href: string
+    ) => {
+      e.preventDefault();
+  
+      setTimeout(() => {
+        router.push(href);
+      }, 500);
+    };
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.6,
+        duration: 0.3,
         delay: index * 0.2,
         ease: "easeOut",
       }}
     >
-      <CustomLink href={`/proyectos/${slug}`}>
+      
+      <Link href={`/proyectos/${slug}`} onClick={(e) => handleClick(e, `/proyectos/${slug}`)}>
       <div className="bg-[#1A1A1A] rounded-lg shadow-lg overflow-hidden 
   transition-all duration-300 transform 
   opacity-70 hover:opacity-100 hover:scale-105 
@@ -64,7 +80,7 @@ export default function ProjectCard({
             <p className="text-sm text-gray-300 mt-2">{descripcion}</p>
           </div>
         </div>
-      </CustomLink>
+      </Link>
     </motion.div>
   );
 }

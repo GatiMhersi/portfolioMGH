@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -50,12 +51,12 @@ export default function Hero() {
             transition={{ delay: 0.6, duration: 0.6 }}
             className="mt-8"
           >
-            <a
+            <Link
               href="/proyectos"
               className="border-solid border-black border-2 drop-shadow-sm inline-block px-6 py-3 text-white bg-[#481E14] rounded-full hover:bg-[#9B3922] transition animate-pulse-button"
             >
               Ver proyectos
-            </a>
+            </Link>
           </motion.div>
         </div>
 
