@@ -3,10 +3,20 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { proyectos } from "../proyectos";
 
-// Simulación de base de datos o importación externa
 
-export default async function ProyectoPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export async function generateStaticParams() {
+  return proyectos.map((p) => ({
+    slug: p.slug,
+  }));
+}
+
+
+export default async function ProyectoPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params;
   const proyecto = proyectos.find((p) => p.slug === slug);
 
   if (!proyecto) return notFound();
