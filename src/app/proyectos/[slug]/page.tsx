@@ -24,8 +24,10 @@ export default async function ProyectoPage({ params }: { params: { slug: string 
           <Image
             src={proyecto.imagen}
             alt={proyecto.titulo}
-            layout="fill"
-            objectFit="cover"
+            fill
+            className="object-cover"
+            sizes="(max-width: 256px) 100vw, 192px"
+            priority
           />
         </div>
 

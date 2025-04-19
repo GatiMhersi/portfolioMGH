@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Hero() {
   return (
@@ -11,18 +12,23 @@ export default function Hero() {
     >
       {/* Contenedor del texto y la imagen */}
       <div className="flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-8">
-         {/* Imagen */}
-         <motion.div
+        {/* Imagen */}
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: .1, scale: 1 }}
+          animate={{ opacity: 0.1, scale: 1 }}
           transition={{ delay: 0.6, duration: 0.6 }}
           className="drop-shadow-2xl drop-shadow-orange-700 w-64 h-64 md:w-80 md:h-auto"
         >
-          <img
-            src="avatar.png" // Asegúrate de cambiar esta ruta con la correcta
-            alt="Imagen de Matías"
-            className="object-cover w-full h-full"
-          />
+          <div className="relative w-80 h-80">
+            <Image
+              src="/avatar.png"
+              alt="Imagen de Matías"
+              fill
+              className="object-contain"
+              sizes="(max-width: 256px) 100vw, 192px"
+              priority
+            />
+          </div>
         </motion.div>
         {/* Texto */}
         <div className="text-center md:text-left">
@@ -32,7 +38,8 @@ export default function Hero() {
             transition={{ duration: 0.6 }}
             className="text-5xl md:text-6xl font-extrabold text-[#F2613F]"
           >
-            Hola, soy <span className="text-[#9B3922] drop-shadow-sm">Matías</span>
+            Hola, soy{" "}
+            <span className="text-[#9B3922] drop-shadow-sm">Matías</span>
           </motion.h1>
 
           <motion.p
@@ -59,8 +66,6 @@ export default function Hero() {
             </Link>
           </motion.div>
         </div>
-
-       
       </div>
     </section>
   );
