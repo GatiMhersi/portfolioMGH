@@ -6,7 +6,7 @@ import { proyectos } from "../proyectos";
 // Simulación de base de datos o importación externa
 
 export default async function ProyectoPage({ params }: { params: { slug: string } }) {
-  const { slug } = await params;
+  const { slug } = params;
   const proyecto = proyectos.find((p) => p.slug === slug);
 
   if (!proyecto) return notFound();
