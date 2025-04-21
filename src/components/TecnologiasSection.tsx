@@ -1,15 +1,32 @@
-// components/TecnologiasSection.tsx
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { tecnologiasPorRol } from "../app/proyectos/tecnologias";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { tecnologiasPorRol } from "../app/proyectos/tecnologias";
 import TecnologiaCard from "../components/TecnologiaCard";
+import TechModal from "../components/TechModal"; // Asegurate de importar correctamente
 
 export default function TecnologiasSection() {
   const [indiceRol, setIndiceRol] = useState(0);
   const rolActual = tecnologiasPorRol[indiceRol];
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [tecnologiaSeleccionada, setTecnologiaSeleccionada] = useState<{
+    nombre: string;
+    descripcion: string;
+    proyectos: string[];
+  } | null>(null);
+
+  const abrirModal = (tec: { nombre: string; descripcion: string; proyectos: string[]}) => {
+    setTecnologiaSeleccionada(tec);
+    setModalOpen(true);
+  };
+
+  const cerrarModal = () => {
+    setModalOpen(false);
+    setTecnologiaSeleccionada(null);
+  };
 
   const cambiarRol = (direccion: "anterior" | "siguiente") => {
     setIndiceRol((prev) =>
@@ -50,6 +67,9 @@ export default function TecnologiasSection() {
                   key={tec.nombre}
                   nombre={tec.nombre}
                   icono={tec.icono}
+                  onClick={() =>
+                    abrirModal({ nombre: tec.nombre, descripcion: tec.description, proyectos:tec.proyectos })
+                  }
                 />
               ))}
             </div>
@@ -68,6 +88,15 @@ export default function TecnologiasSection() {
       >
         <ChevronRight size={32} className="text-white" />
       </button>
+
+      {/* Modal flotante */}
+      <TechModal
+        isOpen={modalOpen}
+        onClose={cerrarModal}
+        title={tecnologiaSeleccionada?.nombre || ""}
+        description={tecnologiaSeleccionada?.descripcion || ""}
+        proyectos={tecnologiaSeleccionada?.proyectos || []}
+      />
     </section>
   );
 }
