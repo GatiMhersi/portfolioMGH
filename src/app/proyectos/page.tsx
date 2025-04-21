@@ -4,9 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import ProjectCard from "@/components/ProjectCard";
 import TecnologiasSection from "@/components/TecnologiasSection";
-import BitacoraSection from "@/components/BitacoraSection";
+
 import SeccionBotonera from "@/components/SeccionBotonera";
 import { proyectos } from "../proyectos/proyectos";
+import DailyLog from "@/components/DailyLog";
 
 export default function ProyectosPage() {
   const [seccionActual, setSeccionActual] = useState("proyectos");
@@ -32,7 +33,7 @@ export default function ProyectosPage() {
       case "tecnologias":
         return <TecnologiasSection />;
       case "bitacora":
-        return <BitacoraSection />;
+        return <DailyLog/>;
       default:
         return null;
     }
