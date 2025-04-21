@@ -13,9 +13,9 @@ export async function generateStaticParams() {
 
 export default async function ProyectoPage({
   params,
-}: {
+}: Readonly<{
   params: Promise<{ slug: string }>
-}) {
+}>) {
   const { slug } = await params;
   const proyecto = proyectos.find((p) => p.slug === slug);
 
