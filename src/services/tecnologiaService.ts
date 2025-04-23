@@ -1,18 +1,21 @@
+// services/tecnologiaService.ts
+
 import Tecnologia from '@/models/Tecnologia'
 import { connectToDatabase } from '@/lib/mongodb'
+import { TecnologiaType } from '@/types/Tecnologia'
 
 export const getTecnologias = async () => {
   await connectToDatabase()
   return await Tecnologia.find()
 }
 
-export const createTecnologia = async (data: any) => {
+export const createTecnologia = async (data: TecnologiaType) => {
   await connectToDatabase()
   const nuevaTecnologia = new Tecnologia(data)
   return await nuevaTecnologia.save()
 }
 
-export const updateTecnologia = async (id: string, data: any) => {
+export const updateTecnologia = async (id: string, data: Partial<TecnologiaType>) => {
   await connectToDatabase()
   return await Tecnologia.findByIdAndUpdate(id, data, { new: true })
 }
