@@ -23,9 +23,9 @@ export const handleGetDailyLogs = async () => {
   }
 }
 
-export const handleUpdateDailyLog = async (req: Request, context: { params: { id: string } }) => {
+export const handleUpdateDailyLog = async (req: Request, params: { id: string } ) => {
   try {
-    const { id } = await context.params
+    const { id } = await params
     const body: Partial<DailyLogType> = await req.json()
     const updatedLog = await updateDailyLog(id, body)
     return NextResponse.json(updatedLog, { status: 200 })
@@ -35,9 +35,9 @@ export const handleUpdateDailyLog = async (req: Request, context: { params: { id
   }
 }
 
-export const handleDeleteDailyLog = async (_: Request, context: { params: { id: string } }) => {
+export const handleDeleteDailyLog = async (_: Request, params: { id: string } ) => {
   try {
-    const { id } = await context.params
+    const { id } = await params
     const deleted = await deleteDailyLog(id)
     return NextResponse.json(deleted, { status: 200 })
   } catch (error: unknown) {
