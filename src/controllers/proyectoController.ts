@@ -28,7 +28,7 @@ export const handleGetProyectos = async () => {
   }
 }
 
-export const handleUpdateProyecto = async (req: Request, { params }: { params: { id: string } }) => {
+export const handleUpdateProyecto = async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
   try {
     const param = await params
     const body: Partial<ProyectoType> = await req.json()
@@ -40,7 +40,7 @@ export const handleUpdateProyecto = async (req: Request, { params }: { params: {
   }
 }
 
-export const handleDeleteProyecto = async (_: Request, { params }: { params: { id: string } }) => {
+export const handleDeleteProyecto = async (_: Request, { params }: { params: Promise<{ id: string }> }) => {
   try {
     const param = await params
     const resultado = await deleteProyecto(param.id)
