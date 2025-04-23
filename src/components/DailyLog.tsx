@@ -167,7 +167,7 @@ const DailyLog: React.FC = () => {
               <motion.li
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -100 }}
                 transition={{ duration: 0.4 }}
                 className="text-gray-300"
               >
@@ -183,7 +183,7 @@ const DailyLog: React.FC = () => {
                     delay: index * 0.08, // Delay escalonado
                     ease: "easeOut",
                   }}}
-                  exit={{ opacity: 0, x: -20 ,transition:{
+                  exit={{ opacity: 0, x: -200 ,transition:{
                     duration: 0.3,
                     delay: index * 0.08, // Delay escalonado
                     ease: "easeIn",
