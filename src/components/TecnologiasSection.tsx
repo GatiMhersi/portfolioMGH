@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { tecnologiasPorRol } from "../app/proyectos/tecnologias";
+import { tecnologiasPorRol } from "../app/(sitio)/proyectos/tecnologias";
 import TecnologiaCard from "../components/TecnologiaCard";
 import TechModal from "../components/TechModal"; // Asegurate de importar correctamente
 

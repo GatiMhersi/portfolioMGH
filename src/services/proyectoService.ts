@@ -10,7 +10,7 @@ export const createProyecto = async (data: ProyectoType) => {
 
 export const getProyectos = async () => {
   await connectToDatabase()
-  return await Proyecto.find().populate('tecnologias')
+  return await Proyecto.find()
 }
 
 export const updateProyecto = async (id: string, data: Partial<ProyectoType>) => {
