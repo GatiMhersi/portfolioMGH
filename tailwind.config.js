@@ -7,6 +7,8 @@ module.exports = {
     ],
     theme: {
       extend: {
+        transform: ['group-hover'],
+        rotate: ['group-hover'],
         animation: {
           'gradient-x': 'gradient-x 10s ease infinite',
         },

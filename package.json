@@ -10,13 +10,15 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
+    "cloudinary": "^2.6.0",
     "lucide-react": "^0.488.0",
     "mongoose": "^8.13.2",
     "motion": "^12.7.3",
     "next": "15.3.0",
     "portfolio": "file:",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sonner": "^2.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
