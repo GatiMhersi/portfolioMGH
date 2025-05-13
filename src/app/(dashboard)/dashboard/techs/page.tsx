@@ -1,5 +1,5 @@
 // app/techs/page.tsx
-'use client';
+"use client";
 import CreateTechnologyForm from "@/components/adminComponents/CreateTechnologyForm";
 import { TechCard } from "@/components/adminComponents/TechCard";
 import { AnimatePresence } from "framer-motion";
@@ -16,50 +16,71 @@ interface Tecnologia {
   descripcion?: string;
 }
 
+interface Proyecto {
+  _id: string;
+  titulo: string;
+  descripcion: string;
+  tecnologias: string[]; // o cualquier otro campo que tenga tu modelo
+  imagen?: string; // si tenés imagen destacada del proyecto
+}
+
 export default function TechsPage() {
   const [tecnologias, setTecnologias] = useState<Tecnologia[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [roles, setRoles] = useState<{ _id: string; nombre: string }[]>([]);
-
+  const [proyectos, setProyectos] = useState<Proyecto[]>([]);
+  const [loadingProyectos, setLoadingProyectos] = useState(true);
+  const [errorProyectos, setErrorProyectos] = useState<string | null>(null);
 
   useEffect(() => {
-    
-
     fetchTecnologias();
+    fetchProyectos();
   }, []);
 
   const fetchTecnologias = async () => {
     try {
-      const response = await fetch('/api/tecnologias');
-      if (!response.ok) throw new Error('Error al obtener tecnologías');
+      const response = await fetch("/api/tecnologias");
+      if (!response.ok) throw new Error("Error al obtener tecnologías");
       const data = await response.json();
       setTecnologias(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchProyectos = async () => {
+    try {
+      const res = await fetch("/api/proyectos");
+      if (!res.ok) throw new Error("Error al obtener proyectos");
+      const data = await res.json();
+      setProyectos(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setErrorProyectos(
+        err instanceof Error ? err.message : "Error desconocido"
+      );
+    } finally {
+      setLoadingProyectos(false);
     }
   };
 
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch('/api/roles');
-        if (!response.ok) throw new Error('Error al obtener roles');
+        const response = await fetch("/api/roles");
+        if (!response.ok) throw new Error("Error al obtener roles");
         const data = await response.json();
         setRoles(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
       }
     };
-  
+
     fetchRoles();
   }, []);
-
-  
-  
 
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -93,9 +114,13 @@ export default function TechsPage() {
 
       {/* Modal para crear tecnología */}
       {showForm && (
-  <CreateTechnologyForm onClose={() => setShowForm(false)} roles={roles} onSuccess={fetchTecnologias} />
-)}
-
+        <CreateTechnologyForm
+          onClose={() => setShowForm(false)}
+          roles={roles}
+          proyectos={proyectos}
+          onSuccess={fetchTecnologias}
+        />
+      )}
 
       <Toaster />
     </div>

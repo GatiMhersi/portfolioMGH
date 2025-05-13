@@ -19,7 +19,7 @@ export function EditRoleModal({
   initialRoleName,
   initialRoleDescription,
   onSuccess,
-}: EditRoleModalProps) {
+}: Readonly<EditRoleModalProps>) {
   const [name, setName] = useState(initialRoleName);
   const [description, setDescription] = useState(initialRoleDescription);
   const [loading, setLoading] = useState(false);

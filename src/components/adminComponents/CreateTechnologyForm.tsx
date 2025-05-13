@@ -1,28 +1,40 @@
-'use client';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { AnimatePresence, motion } from 'framer-motion';
+"use client";
+import { useState } from "react";
+import { toast } from "sonner";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Role {
   _id: string;
   nombre: string;
 }
 
+interface Proyecto {
+  _id: string;
+  titulo: string;
+}
+
 interface Props {
   onClose: () => void;
   roles: Role[];
   onSuccess: () => void;
+  proyectos: Proyecto[];
 }
 
-
-export default function CreateTechnologyForm({ onClose, roles, onSuccess }: Props) {
-  const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
+export default function CreateTechnologyForm({
+  onClose,
+  roles,
+  onSuccess,
+  proyectos,
+}: Props) {
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(true);
-  const [rolId, setRolId] = useState<string>('');
-
+  const [rolId, setRolId] = useState<string>("");
+  const [proyectosSeleccionados, setProyectosSeleccionados] = useState<
+    string[]
+  >([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,17 +67,19 @@ export default function CreateTechnologyForm({ onClose, roles, onSuccess }: Prop
           nombre,
           descripcion,
           icono: { url, public_id },
-          ...(rolId && { rol : rolId }), // <-- solo se incluye si tiene valor
-        })
-        ,
+          ...(rolId && { rol: rolId }),
+          ...(proyectosSeleccionados.length > 0 && {
+            proyectos: proyectosSeleccionados,
+          }),
+        }),
       });
 
       if (!createRes.ok) throw new Error("Error al crear la tecnología");
 
       toast.success("Tecnología creada exitosamente");
-      onSuccess()
-      setNombre('');
-      setDescripcion('');
+      onSuccess();
+      setNombre("");
+      setDescripcion("");
       setFile(null);
       setVisible(false);
     } catch (error) {
@@ -76,24 +90,30 @@ export default function CreateTechnologyForm({ onClose, roles, onSuccess }: Prop
     }
   };
 
+  const handleProyectoChange = (id: string) => {
+    setProyectosSeleccionados((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
+
   const handleCancel = () => {
     setVisible(false);
-    
   };
 
   const handleAnimationComplete = () => {
-    if (!visible){onClose()};
+    if (!visible) {
+      onClose();
+    }
   };
 
   return (
-    <AnimatePresence mode='wait' onExitComplete={handleAnimationComplete}>
+    <AnimatePresence mode="wait" onExitComplete={handleAnimationComplete}>
       {visible && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          
         >
           {/* Backdrop */}
           <motion.div
@@ -109,10 +129,12 @@ export default function CreateTechnologyForm({ onClose, roles, onSuccess }: Prop
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
             className="bg-white rounded-lg p-6 w-full max-w-md mx-auto relative z-10 shadow-lg"
           >
-            <h2 className="text-xl font-semibold mb-4">Crear nueva tecnología</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Crear nueva tecnología
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
@@ -139,19 +161,70 @@ export default function CreateTechnologyForm({ onClose, roles, onSuccess }: Prop
                 required
               />
 
-<select
-  value={rolId}
-  onChange={(e) => setRolId(e.target.value)}
-  className="w-full border rounded px-3 py-2"
->
-  <option value="">Selecciona un rol (opcional)</option>
-  {roles.map((rol) => (
-    <option key={rol._id} value={rol._id}>
-      {rol.nombre}
-    </option>
-  ))}
-</select>
+              <select
+                value={rolId}
+                onChange={(e) => setRolId(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              >
+                <option value="">Selecciona un rol (opcional)</option>
+                {roles.map((rol) => (
+                  <option key={rol._id} value={rol._id}>
+                    {rol.nombre}
+                  </option>
+                ))}
+              </select>
 
+              <div className="space-y-2">
+                <label className="font-semibold block">
+                  Proyectos (opcional):
+                </label>
+
+                <select
+                  multiple
+                  value={proyectosSeleccionados}
+                  onChange={(e) =>{
+                    handleProyectoChange(e.target.value)
+                    }
+                  }
+                  className="w-full border rounded px-3 py-2 h-32"
+                >
+                  {proyectos.map((proyecto) => (
+                    <option key={proyecto._id} value={proyecto._id}>
+                      {proyecto.titulo}
+                    </option>
+                  ))}
+                </select>
+
+                {proyectosSeleccionados.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-sm font-medium mb-1">Seleccionados:</p>
+                    <ul className="flex flex-wrap gap-2">
+                      {proyectosSeleccionados.map((id) => {
+                        const p = proyectos.find((proj) => proj._id === id);
+                        return (
+                          <li
+                            key={id}
+                            className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm flex items-center gap-2"
+                          >
+                            {p?.titulo || "Proyecto desconocido"}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setProyectosSeleccionados((prev) =>
+                                  prev.filter((pid) => pid !== id)
+                                )
+                              }
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              ×
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </div>
 
               <div className="flex justify-between mt-6">
                 <button
