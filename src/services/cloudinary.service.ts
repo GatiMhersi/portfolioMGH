@@ -20,3 +20,21 @@ export async function uploadImageService(file: File, folder: string): Promise<Up
     Readable.from(buffer).pipe(uploadStream);
   });
 }
+
+export async function replaceImageService(file: File, folder: string, publicIdToDelete: string) {
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const base64Image = `data:${file.type};base64,${buffer.toString("base64")}`;
+
+  // 1. Eliminar la imagen anterior
+  await cloudinary.uploader.destroy(publicIdToDelete);
+
+  // 2. Subir la nueva imagen
+  const result = await cloudinary.uploader.upload(base64Image, {
+    folder,
+  });
+
+  return {
+    secure_url: result.secure_url,
+    public_id: result.public_id,
+  };
+}

@@ -14,10 +14,13 @@ interface TechCardProps {
   };
   index: number;
   descripcion?: string;
+  rol?: string;
+  proyectos?: string[]
   onSuccess: () => void;
+  onEdit: (tech: { id: string; nombre: string; icono: any; descripcion?: string; rol?: string; proyectos?: string[] }) => void;
 }
 
-export const TechCard: React.FC<TechCardProps> = ({ nombre, icono, index, id, onSuccess }: TechCardProps) => {
+export const TechCard: React.FC<TechCardProps> = ({ nombre, icono, index, id, descripcion, proyectos, rol, onSuccess, onEdit }: TechCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
   
 
@@ -59,7 +62,10 @@ export const TechCard: React.FC<TechCardProps> = ({ nombre, icono, index, id, on
         >
           <h3 className="text-sm font-semibold mb-2">{nombre}</h3>
           <div className="flex gap-2">
-            <button className="cursor-pointer transition-all p-1 rounded hover:bg-orange-400">
+            <button className="cursor-pointer transition-all p-1 rounded hover:bg-orange-400" onClick={(e) => {
+    e.stopPropagation(); // previene el flip
+    onEdit({ id, nombre, icono, descripcion, rol, proyectos });
+  }}>
               <Pencil size={16} />
             </button>
             <button className="cursor-pointer transition-all p-1 rounded hover:bg-red-800 hover:text-white"

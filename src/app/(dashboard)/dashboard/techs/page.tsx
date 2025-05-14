@@ -1,6 +1,7 @@
 // app/techs/page.tsx
 "use client";
 import CreateTechnologyForm from "@/components/adminComponents/CreateTechnologyForm";
+import EditTechnologyModal from "@/components/adminComponents/EditTechnologyModal";
 import { TechCard } from "@/components/adminComponents/TechCard";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -14,6 +15,8 @@ interface Tecnologia {
     public_id: string;
   };
   descripcion?: string;
+  rol?: string;
+  proyectos?: string[];
 }
 
 interface Proyecto {
@@ -33,6 +36,7 @@ export default function TechsPage() {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [loadingProyectos, setLoadingProyectos] = useState(true);
   const [errorProyectos, setErrorProyectos] = useState<string | null>(null);
+  const [editTech, setEditTech] = useState<Tecnologia | null>(null);
 
   useEffect(() => {
     fetchTecnologias();
@@ -93,11 +97,24 @@ export default function TechsPage() {
           {tecnologias.map((tech, index) => (
             <TechCard
               key={tech._id}
+              rol={tech.rol}
               nombre={tech.nombre}
               icono={tech.icono}
               index={index}
               id={tech._id}
+              descripcion={tech.descripcion}
+              proyectos={tech.proyectos}
               onSuccess={fetchTecnologias}
+              onEdit={(data) =>
+                setEditTech({
+                  _id: data.id,
+                  nombre: data.nombre,
+                  icono: data.icono,
+                  descripcion: data.descripcion,
+                  rol: data.rol,
+                  proyectos: data.proyectos,
+                })
+              }
             />
           ))}
         </AnimatePresence>
@@ -119,6 +136,19 @@ export default function TechsPage() {
           roles={roles}
           proyectos={proyectos}
           onSuccess={fetchTecnologias}
+        />
+      )}
+
+      {editTech && (
+        <EditTechnologyModal
+          roles={roles}
+          proyectos={proyectos}
+          tech={editTech}
+          onClose={() => setEditTech(null)}
+          onSuccess={() => {
+            setEditTech(null);
+            fetchTecnologias();
+          }}
         />
       )}
 
