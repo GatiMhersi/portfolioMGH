@@ -41,6 +41,7 @@ export default function TechsPage() {
   useEffect(() => {
     fetchTecnologias();
     fetchProyectos();
+    fetchRoles();
   }, []);
 
   const fetchTecnologias = async () => {
@@ -71,20 +72,16 @@ export default function TechsPage() {
     }
   };
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await fetch("/api/roles");
-        if (!response.ok) throw new Error("Error al obtener roles");
-        const data = await response.json();
-        setRoles(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchRoles();
-  }, []);
+  const fetchRoles = async () => {
+    try {
+      const response = await fetch("/api/roles");
+      if (!response.ok) throw new Error("Error al obtener roles");
+      const data = await response.json();
+      setRoles(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -130,7 +127,7 @@ export default function TechsPage() {
       </button>
 
       {/* Modal para crear tecnología */}
-      {showForm && (
+      {showForm && !loadingProyectos && !errorProyectos && (
         <CreateTechnologyForm
           onClose={() => setShowForm(false)}
           roles={roles}
@@ -139,7 +136,14 @@ export default function TechsPage() {
         />
       )}
 
-      {editTech && (
+      {showForm && loadingProyectos && (
+        <p className="mt-4">Cargando proyectos...</p>
+      )}
+      {showForm && errorProyectos && (
+        <p className="mt-4 text-red-500">Error: {errorProyectos}</p>
+      )}
+
+      {editTech && !loadingProyectos && !errorProyectos && (
         <EditTechnologyModal
           roles={roles}
           proyectos={proyectos}
@@ -150,6 +154,13 @@ export default function TechsPage() {
             fetchTecnologias();
           }}
         />
+      )}
+
+      {editTech && loadingProyectos && (
+        <p className="mt-4">Cargando proyectos...</p>
+      )}
+      {editTech && errorProyectos && (
+        <p className="mt-4 text-red-500">Error: {errorProyectos}</p>
       )}
 
       <Toaster />
