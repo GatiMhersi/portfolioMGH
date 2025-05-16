@@ -15,8 +15,8 @@ export default function AdminNavbar() {
   const pathname = usePathname();
 
   return (
-    <aside className="h-screen w-64 bg-gray-950 text-white flex flex-col p-4">
-      <h2 className="text-2xl font-bold mb-6 text-orange-500">Admin Panel</h2>
+    <aside className="h-screen w-64 bg-gray-950 fixed left-0 top-0 z-10 text-white flex flex-col p-4">
+      <h2 className="text-2xl font-bold mb-6 text-orange-500 ">Admin Panel</h2>
       <nav className="flex flex-col gap-2">
         {links.map((link) => {
           const isActive = pathname === link.href;
