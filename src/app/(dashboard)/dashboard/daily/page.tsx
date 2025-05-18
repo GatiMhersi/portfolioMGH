@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import NewDailyLogForm from "@/components/adminComponents/NewDailyLogForm";
 import DailyLogList from "@/components/adminComponents/DailyLogList";
+import EditDailyLogModal from "@/components/adminComponents/EditDailyLogModal";
+
 import { Toaster } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -12,6 +14,7 @@ const DaliPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,10 +115,28 @@ const DaliPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              <DailyLogList dailylogs={dailylogs} proyectos={proyectos} />
+              <DailyLogList
+                dailylogs={dailylogs}
+                proyectos={proyectos}
+                onEditLog={(log) => setSelectedLog(log)}
+              />
             </motion.div>
           </>
         )}
+        <div className="absolute">
+        <AnimatePresence>
+          {selectedLog && (
+            
+              <EditDailyLogModal
+                dailyLog={selectedLog}
+                proyectos={proyectos}
+                onClose={() => setSelectedLog(null)}
+                onUpdated={() => {}}
+              />
+            
+          )}
+        </AnimatePresence>
+        </div>
       </motion.section>
 
       <Toaster position="bottom-right" richColors />

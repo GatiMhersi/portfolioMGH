@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Pencil, Trash2 } from "lucide-react"; // Importar íconos
 
 type Tarea = {
   time: string;
@@ -23,9 +24,11 @@ type Proyecto = {
 const DailyLogList = ({
   dailylogs,
   proyectos,
+  onEditLog,
 }: {
   dailylogs: DailyLog[];
   proyectos: Proyecto[];
+  onEditLog: (log: DailyLog) => void;
 }) => {
   const getTituloProyecto = (id: string) => {
     const proyecto = proyectos.find((p) => p._id === id);
@@ -47,7 +50,7 @@ const DailyLogList = ({
           {dailylogs.map((log, index) => (
             <motion.div
               key={log._id}
-              className="min-w-[300px] min-h-full max-w-sm bg-white p-4 rounded shadow-md shrink-0"
+              className="relative min-w-[300px] min-h-full max-w-sm bg-white p-4 rounded shadow-md shrink-0"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -56,6 +59,22 @@ const DailyLogList = ({
                 delay: index * 0.2,
               }}
             >
+              {/* Botones de acción */}
+              <div className="absolute top-2 right-2 flex gap-2">
+                <button
+                  className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                  onClick={() => onEditLog(log)}
+                >
+                  <Pencil size={18} />
+                </button>
+                <button
+                  className="p-1 rounded hover:bg-red-100 text-red-600"
+                  onClick={() => console.log("Eliminar:", log._id)}
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+
               <h3 className="font-bold mb-2">
                 📅 {new Date(log.fecha).toLocaleDateString()}
               </h3>
