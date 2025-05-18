@@ -1,4 +1,5 @@
 export interface DailyLogType {
+    _id: string
     fecha: string
     tareas: {
       time: string

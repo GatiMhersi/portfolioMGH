@@ -3,6 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Pencil, Trash2 } from "lucide-react"; // Importar íconos
+import { toast } from "sonner";
+
 
 type Tarea = {
   time: string;
@@ -25,15 +27,36 @@ const DailyLogList = ({
   dailylogs,
   proyectos,
   onEditLog,
+  onDeleteLog,
 }: {
   dailylogs: DailyLog[];
   proyectos: Proyecto[];
   onEditLog: (log: DailyLog) => void;
+  onDeleteLog: (id: string) => void;
 }) => {
   const getTituloProyecto = (id: string) => {
     const proyecto = proyectos.find((p) => p._id === id);
     return proyecto ? proyecto.titulo : "Proyecto desconocido";
   };
+
+  const eliminarLog = async (id: string) => {
+  try {
+    const res = await fetch(`/api/dailylogs/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error("Error al eliminar el log");
+    }
+    onDeleteLog(id);
+    toast.success("🗑️ Log eliminado correctamente");
+    // Opcionalmente, podrías actualizar la UI local aquí (por ejemplo, con un callback)
+    console.log("Log eliminado correctamente");
+  } catch (error) {
+    console.error("Error al eliminar el log:", error);
+  }
+};
+
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -69,7 +92,7 @@ const DailyLogList = ({
                 </button>
                 <button
                   className="p-1 rounded hover:bg-red-100 text-red-600"
-                  onClick={() => console.log("Eliminar:", log._id)}
+                  onClick={() => eliminarLog(log._id)}
                 >
                   <Trash2 size={18} />
                 </button>

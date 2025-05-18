@@ -4,17 +4,19 @@ import React, { useEffect, useState } from "react";
 import NewDailyLogForm from "@/components/adminComponents/NewDailyLogForm";
 import DailyLogList from "@/components/adminComponents/DailyLogList";
 import EditDailyLogModal from "@/components/adminComponents/EditDailyLogModal";
+import { DailyLogType } from "@/types/DailyLog";
 
 import { Toaster } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
 const DaliPage = () => {
   const [proyectos, setProyectos] = useState([]);
-  const [dailylogs, setDailylogs] = useState([]);
+  const [dailylogs, setDailylogs] = useState<DailyLogType[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [selectedLog, setSelectedLog] = useState(null);
+  const [selectedLog, setSelectedLog] = useState<DailyLogType | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +48,21 @@ const DaliPage = () => {
 
     fetchData();
   }, []);
+  const handleCreatedLog = (newLog: DailyLogType) => {
+    setDailylogs((prev) => [...prev, newLog]);
+    setShowForm(false); // opcional: cerrar modal después de crear
+  };
+  
+  const handleUpdateLog = (updatedLog: DailyLogType) => {
+  setDailylogs((prev) =>
+    prev.map((log) => (log._id === updatedLog._id ? updatedLog : log))
+  );
+  setSelectedLog(null); // cerrar el modal
+};
+
+  const handleDeleteLog = (id: string) => {
+  setDailylogs((prev) => prev.filter((log) => log._id !== id));
+};
 
   return (
     <main className="w-full h-full p-6 bg-gray-50 relative overflow-hidden">
@@ -96,7 +113,7 @@ const DaliPage = () => {
                     exit={{ scale: 0.8, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <NewDailyLogForm proyectos={proyectos} />
+                    <NewDailyLogForm proyectos={proyectos} onCreated={handleCreatedLog}/>
                     <button
                       onClick={() => setShowForm(false)}
                       className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl"
@@ -118,7 +135,8 @@ const DaliPage = () => {
               <DailyLogList
                 dailylogs={dailylogs}
                 proyectos={proyectos}
-                onEditLog={(log) => setSelectedLog(log)}
+                onEditLog={(log: DailyLogType) => setSelectedLog(log)}
+                onDeleteLog={handleDeleteLog}
               />
             </motion.div>
           </>
@@ -131,7 +149,7 @@ const DaliPage = () => {
                 dailyLog={selectedLog}
                 proyectos={proyectos}
                 onClose={() => setSelectedLog(null)}
-                onUpdated={() => {}}
+                onUpdated={(updatedLog: DailyLogType) => handleUpdateLog(updatedLog)}
               />
             
           )}

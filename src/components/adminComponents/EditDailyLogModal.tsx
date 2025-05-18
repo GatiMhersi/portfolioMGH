@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { DailyLogType } from "@/types/DailyLog";
 
 type Tarea = {
   time: string;
@@ -33,7 +34,7 @@ const modalVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { type: 'spring', stiffness: 300, damping: 25 },
+    transition: { type: "spring", stiffness: 300, damping: 25 },
   },
   exit: { opacity: 0, y: -30, scale: 0.9 },
 };
@@ -47,20 +48,24 @@ const EditDailyLogForm = ({
   dailyLog: DailyLog;
   proyectos: Proyecto[];
   onClose: () => void;
-  onUpdated: () => void;
+  onUpdated: (updatedLog: DailyLogType) => void;
 }) => {
   const [fecha, setFecha] = useState(dailyLog.fecha);
   const [tareas, setTareas] = useState<Tarea[]>([...dailyLog.tareas]);
   const [visible, setVisible] = useState(true);
 
-  const handleTareaChange = (index: number, field: keyof Tarea, value: string) => {
+  const handleTareaChange = (
+    index: number,
+    field: keyof Tarea,
+    value: string
+  ) => {
     const updated = [...tareas];
     updated[index][field] = value;
     setTareas(updated);
   };
 
   const addTarea = () => {
-    setTareas([...tareas, { time: '', activity: '', project: '' }]);
+    setTareas([...tareas, { time: "", activity: "", project: "" }]);
   };
 
   const removeTarea = (index: number) => {
@@ -71,17 +76,19 @@ const EditDailyLogForm = ({
     e.preventDefault();
     try {
       const res = await fetch(`/api/dailylogs/${dailyLog._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fecha, tareas }),
       });
-      if (!res.ok) throw new Error('Error al actualizar el registro');
-      toast.success('Registro diario actualizado correctamente.');
-      onUpdated();
+      if (!res.ok) throw new Error("Error al actualizar el registro");
+      toast.success("Registro diario actualizado correctamente.");
+      const updatedLog = await res.json(); // Suponiendo que la API devuelve el log actualizado
+      toast.success("Registro diario actualizado correctamente.");
+      onUpdated(updatedLog); // 👈 Pasás el nuevo log
       setVisible(false); // Oculta con animación
     } catch (err) {
       console.error(err);
-      toast.error('Error al actualizar el registro.');
+      toast.error("Error al actualizar el registro.");
     }
   };
 
@@ -118,7 +125,9 @@ const EditDailyLogForm = ({
               ✖
             </button>
 
-            <h2 className="text-lg font-semibold mb-4 text-center">Editar Registro Diario</h2>
+            <h2 className="text-lg font-semibold mb-4 text-center">
+              Editar Registro Diario
+            </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-sm">
               <div>
@@ -141,7 +150,9 @@ const EditDailyLogForm = ({
                     <input
                       type="time"
                       value={tarea.time}
-                      onChange={(e) => handleTareaChange(index, 'time', e.target.value)}
+                      onChange={(e) =>
+                        handleTareaChange(index, "time", e.target.value)
+                      }
                       className="border p-2 rounded"
                       required
                     />
@@ -149,13 +160,17 @@ const EditDailyLogForm = ({
                       type="text"
                       placeholder="Actividad"
                       value={tarea.activity}
-                      onChange={(e) => handleTareaChange(index, 'activity', e.target.value)}
+                      onChange={(e) =>
+                        handleTareaChange(index, "activity", e.target.value)
+                      }
                       className="border p-2 rounded"
                       required
                     />
                     <select
                       value={tarea.project}
-                      onChange={(e) => handleTareaChange(index, 'project', e.target.value)}
+                      onChange={(e) =>
+                        handleTareaChange(index, "project", e.target.value)
+                      }
                       className="border p-2 rounded"
                       required
                     >

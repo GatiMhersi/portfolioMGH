@@ -1,5 +1,6 @@
 'use client';
 
+import { DailyLogType } from '@/types/DailyLog';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -15,7 +16,7 @@ type Proyecto = {
   titulo: string;
 };
 
-const NewDailyLogForm = ({ proyectos }: { proyectos: Proyecto[] }) => {
+const NewDailyLogForm = ({ proyectos,onCreated  }: { proyectos: Proyecto[]; onCreated?: (newLog: DailyLogType) => void; }) => {
   const [fecha, setFecha] = useState('');
   const [tareas, setTareas] = useState<Tarea[]>([{ time: '', activity: '', project: '' }]);
 
@@ -42,10 +43,13 @@ const NewDailyLogForm = ({ proyectos }: { proyectos: Proyecto[] }) => {
         body: JSON.stringify({ fecha, tareas }),
       });
       if (!res.ok) throw new Error('Error al crear el registro');
+      const nuevoLog = await res.json();
       toast.success('Registro diario creado exitosamente!');
 
       setFecha('');
       setTareas([{ time: '', activity: '', project: '' }]);
+
+      if (onCreated) onCreated(nuevoLog);
     } catch (err) {
       console.error(err);
       toast.error('Ocurrió un error al enviar los datos.');
