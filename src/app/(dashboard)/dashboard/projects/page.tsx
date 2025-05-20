@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "@/components/adminComponents/ProjectCard"; // Ajusta la ruta si es necesario
 import ProyectoForm from "@/components/adminComponents/ProjectForm";
+import EditarProyectoForm from "@/components/adminComponents/EditarProyectoForm";
 
 type Proyecto = {
   _id: string;
@@ -25,6 +26,8 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [tecnologias, setTecnologias] = useState<Tecnologia[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [proyectoEnEdicion, setProyectoEnEdicion] = useState<Proyecto | null>(null);
+
 
   const [error, setError] = useState("");
 
@@ -88,6 +91,7 @@ export default function ProjectsPage() {
                 imagen={proyecto.imagen}
                 index={index}
                 onDeleted={fetchProyectos}
+                onEdit={() => setProyectoEnEdicion(proyecto)}
               />
             </li>
           ))}
@@ -101,6 +105,17 @@ export default function ProjectsPage() {
           Nuevo Proyecto
         </button>
       </div>
+      {proyectoEnEdicion && (
+  <div className="absolute top-0 left-0">
+    <EditarProyectoForm
+      proyecto={proyectoEnEdicion}
+      tecnologiasDisponibles={tecnologias}
+      onClose={() => setProyectoEnEdicion(null)}
+      onProyectoActualizado={fetchProyectos}
+    />
+  </div>
+)}
+
 
       {showForm && (
         <div className="absolute top-0 left-0">

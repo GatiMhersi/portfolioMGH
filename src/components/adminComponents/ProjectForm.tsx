@@ -109,7 +109,7 @@ export default function ProyectoForm({
       if (!resProyecto.ok) throw new Error("Error al crear el proyecto");
 
       const proyectoCreado = await resProyecto.json(); // asumimos que retorna el proyecto creado
-onProyectoCreado(proyectoCreado);
+      onProyectoCreado(proyectoCreado);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -204,8 +204,11 @@ onProyectoCreado(proyectoCreado);
               />
 
               <div>
-                <label className="font-medium">Agregar tecnologías:</label>
+                <label htmlFor="select-tech" className="font-medium">
+                  Agregar tecnologías:
+                </label>
                 <select
+                  id="select-tech"
                   onChange={handleAddTecnologia}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   defaultValue=""

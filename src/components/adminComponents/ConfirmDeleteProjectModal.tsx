@@ -10,7 +10,7 @@ type Props = {
   loading?: boolean;
 };
 
-export default function ConfirmDeleteModal({ open, onClose, onConfirm, loading }: Props) {
+export default function ConfirmDeleteModal({ open, onClose, onConfirm, loading }: Readonly<Props>) {
   if (!open) return null;
 
   return (
