@@ -9,7 +9,10 @@ const ProyectoSchema = new mongoose.Schema({
   titulo: { type: String, required: true }, // Título del proyecto
   descripcion: String, // Breve descripción
   detalles: String, // Detalles técnicos o funcionales
-  imagen: String, // Ruta de imagen del proyecto
+  imagen: {
+    url: { type: String, required: true },       // URL de Cloudinary para mostrar el ícono
+    public_id: { type: String, required: true }  // public_id necesario para eliminarlo
+  },
   tecnologias: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tecnologia' }] // Relación con tecnologías
 })
 

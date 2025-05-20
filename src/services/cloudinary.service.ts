@@ -38,3 +38,16 @@ export async function replaceImageService(file: File, folder: string, publicIdTo
     public_id: result.public_id,
   };
 }
+
+// lib/services/cloudinaryService.ts
+
+export async function eliminarImagen(public_id: string) {
+  try {
+    const result = await cloudinary.uploader.destroy(public_id);
+    return result;
+  } catch (error) {
+    console.error('Error eliminando imagen de Cloudinary:', error);
+    throw new Error('Error eliminando imagen de Cloudinary');
+  }
+}
+

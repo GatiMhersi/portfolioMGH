@@ -1,8 +1,9 @@
+// app/dashboard/projects/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
+import ProjectCard from "@/components/adminComponents/ProjectCard"; // Ajusta la ruta si es necesario
+import ProyectoForm from "@/components/adminComponents/ProjectForm";
 
 type Proyecto = {
   _id: string;
@@ -10,31 +11,67 @@ type Proyecto = {
   titulo: string;
   descripcion?: string;
   detalles?: string;
-  imagen?: string;
+  imagen?: { url: string; public_id: string };
   tecnologias: string[];
+};
+
+type Tecnologia = {
+  _id: string;
+  nombre: string;
 };
 
 export default function ProjectsPage() {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tecnologias, setTecnologias] = useState<Tecnologia[]>([]);
+  const [showForm, setShowForm] = useState(false);
+
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchProyectos = async () => {
+    const fetchTecnologias = async () => {
       try {
-        const res = await fetch("/api/proyectos");
+        const res = await fetch("/api/tecnologias");
+        if (!res.ok) throw new Error("Error al obtener tecnologías");
         const data = await res.json();
-        setProyectos(data);
-      } catch (error) {
-        console.error("Error al cargar proyectos:", error);
+        setTecnologias(data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Ocurrió un error desconocido");
+        }
       } finally {
         setLoading(false);
       }
     };
 
+    fetchTecnologias();
+  }, []);
+
+  const fetchProyectos = async () => {
+    try {
+      const res = await fetch("/api/proyectos");
+      const data = await res.json();
+      setProyectos(data);
+    } catch (error) {
+      console.error("Error al cargar proyectos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchProyectos();
   }, []);
 
+  const handleProyectoCreado = (nuevoProyecto: Proyecto) => {
+  setProyectos((prev) => [...prev, nuevoProyecto]);
+  setShowForm(false); // opcional: cerrar el modal
+};
+
   if (loading) return <p className="text-gray-600">Cargando proyectos...</p>;
+  if (error) return <p className="p-4 text-red-600">{error}</p>;
 
   return (
     <section className="space-y-6">
@@ -44,30 +81,35 @@ export default function ProjectsPage() {
       ) : (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {proyectos.map((proyecto, index) => (
-            <motion.li
-              key={proyecto._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: index * 0.1}}
-              className="bg-white rounded shadow p-4 hover:shadow-md transition"
-            >
-              <h2 className="text-xl font-semibold text-gray-800">
-                {proyecto.titulo}
-              </h2>
-              <p className="text-gray-600 text-sm">{proyecto.descripcion}</p>
-              {proyecto.imagen && (
-                <div className="relative w-full h-40 mt-2 rounded overflow-hidden">
-                  <Image
-                    src={proyecto.imagen}
-                    alt={proyecto.titulo}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
-            </motion.li>
+            <li key={proyecto._id}>
+              <ProjectCard
+                id={proyecto._id}
+                titulo={proyecto.titulo}
+                imagen={proyecto.imagen}
+                index={index}
+                onDeleted={fetchProyectos}
+              />
+            </li>
           ))}
         </ul>
+      )}
+      <div className="absolute">
+        <button
+          onClick={() => setShowForm(true)}
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 shadow-lg"
+        >
+          Nuevo Proyecto
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="absolute top-0 left-0">
+          <ProyectoForm
+            tecnologiasDisponibles={tecnologias}
+            onClose={() => setShowForm(false)}
+            onProyectoCreado={handleProyectoCreado}
+          />
+        </div>
       )}
     </section>
   );
