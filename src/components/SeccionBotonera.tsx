@@ -15,9 +15,9 @@ const botones = [
 export default function SeccionBotonera({
   seccionActual,
   setSeccionActual,
-}: SeccionBotoneraProps) {
+}: Readonly<SeccionBotoneraProps>) {
   return (
-    <div className="flex justify-center gap-4 mb-10 flex-wrap">
+    <div className="flex text-base mt-3 justify-center gap-4 mb-10 flex-wrap">
       {botones.map(({ id, label }) => (
         <button
           key={id}

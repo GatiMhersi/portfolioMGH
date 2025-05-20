@@ -1,4 +1,5 @@
 import Proyecto from '@/models/Proyecto'
+import '@/models/Tecnologia'
 import { connectToDatabase } from '@/lib/mongodb'
 import type { ProyectoType } from '@/types/Proyecto' // asegurate de crearlo
 
@@ -10,7 +11,7 @@ export const createProyecto = async (data: ProyectoType) => {
 
 export const getProyectos = async () => {
   await connectToDatabase()
-  return await Proyecto.find()
+  return await Proyecto.find().populate("tecnologias", "nombre");
 }
 
 export const updateProyecto = async (id: string, data: Partial<ProyectoType>) => {

@@ -1,23 +1,43 @@
 // app/proyectos/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { proyectos } from "../proyectos";
+import Proyecto from "@/models/Proyecto";
+import "@/models/Tecnologia"; // para registrar el modelo
+import { connectToDatabase } from "@/lib/mongodb";
 
-
+// Generador de rutas estáticas en build time
 export async function generateStaticParams() {
-  return proyectos.map((p) => ({
+  await connectToDatabase();
+  const proyectos = await Proyecto.find({}, "slug"); // solo traemos los slugs
+  return proyectos.map((p: { slug: string }) => ({
     slug: p.slug,
   }));
 }
 
+type TecnologiaType = {
+  nombre: string
+}
+
+interface Proyecto {
+  slug: string;
+  titulo: string;
+  descripcion: string;
+  detalles: string;
+  imagen: { url: string; public_id: string };
+  tecnologias: (string | TecnologiaType)[]
+}
 
 export default async function ProyectoPage({
   params,
 }: Readonly<{
-  params: Promise<{ slug: string }>
+  params: { slug: string };
 }>) {
-  const { slug } = await params;
-  const proyecto = proyectos.find((p) => p.slug === slug);
+  await connectToDatabase();
+  const {slug} = await params
+  const proyecto:Proyecto = await Proyecto.findOne({ slug: slug }).populate(
+    "tecnologias",
+    "nombre"
+  );
 
   if (!proyecto) return notFound();
 
@@ -32,11 +52,11 @@ export default async function ProyectoPage({
 
         <div className="w-full h-64 relative rounded-lg overflow-hidden mb-6">
           <Image
-            src={proyecto.imagen}
+            src={proyecto.imagen.url}
             alt={proyecto.titulo}
             fill
             className="object-cover"
-            sizes="(max-width: 256px) 100vw, 192px"
+            sizes="(max-width: 768px) 100vw, 50vw"
             priority
           />
         </div>
@@ -49,14 +69,15 @@ export default async function ProyectoPage({
           Tecnologías utilizadas:
         </h2>
         <ul className="flex flex-wrap gap-2">
-          {proyecto.tecnologias.map((tec, index) => (
-            <li
-              key={index}
-              className="bg-[#481E14] text-sm px-3 py-1 rounded-full text-white"
-            >
-              {tec}
-            </li>
-          ))}
+          {Array.isArray(proyecto.tecnologias) &&
+            proyecto.tecnologias.map((tec, index: number) => (
+              <li
+                key={index + "key"}
+                className="bg-[#481E14] text-sm px-3 py-1 rounded-full text-white"
+              >
+                {typeof tec === "string" ? tec : tec.nombre}
+              </li>
+            ))}
         </ul>
       </div>
     </section>

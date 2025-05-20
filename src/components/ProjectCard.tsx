@@ -23,7 +23,7 @@ export default function ProjectCard({
   imagen,
   tecnologias = [],
   index = 0,
-}: ProjectCardProps) {
+}: Readonly<ProjectCardProps>) {
   const router = useRouter();
 
   const handleClick = (
