@@ -7,6 +7,17 @@ import TecnologiasSection from "@/components/TecnologiasSection";
 import SeccionBotonera from "@/components/SeccionBotonera";
 import DailyLog from "@/components/DailyLog";
 
+interface DailyLogType {
+  _id: string;
+  fecha: string; // "YYYY-MM-DD"
+  tareas: {
+    time: string; // "08:30"
+    activity: string; // "Fix en formulario"
+    project: string;
+  }[];
+}
+
+
 type TecnologiaTypeForProject = {
   nombre: string
 }
@@ -29,6 +40,7 @@ interface TecnologiaType {
 
 
 interface Proyecto {
+  _id: string;
   slug: string;
   titulo: string;
   descripcion: string;
@@ -41,6 +53,9 @@ export default function ProyectosPage() {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [loading, setLoading] = useState(true);
   const [tecnologias, setTecnologias] = useState<TecnologiaType[]>([]);
+  const [dailyLogs, setDailyLogs] = useState<DailyLogType[]>([]);
+
+
 
 
   useEffect(() => {
@@ -75,6 +90,23 @@ export default function ProyectosPage() {
   fetchTecnologias();
 }, []);
 
+useEffect(() => {
+  const fetchDailyLogs = async () => {
+    try {
+      const res = await fetch("/api/dailylogs");
+      if (!res.ok) throw new Error("Error al obtener dailyLogs");
+      const data = await res.json();
+      setDailyLogs(data);
+      console.log("DailyLogs:", data);
+    } catch (error) {
+      console.error("Error al obtener dailyLogs:", error);
+    }
+  };
+
+  fetchDailyLogs();
+}, []);
+
+
 
   const renderSeccion = () => {
     switch (seccionActual) {
@@ -106,7 +138,8 @@ export default function ProyectosPage() {
   return <TecnologiasSection tecnologias={tecnologias} />;
 
       case "bitacora":
-        return <DailyLog />;
+  return <DailyLog data={dailyLogs} proyectos={proyectos}/>;
+
       default:
         return null;
     }
