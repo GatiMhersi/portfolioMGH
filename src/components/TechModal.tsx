@@ -7,7 +7,7 @@ type TechModalProps = {
   onClose: () => void;
   title: string;
   description: string;
-  proyectos?: string[];
+  proyectos?: {_id: string; slug: string}[]; // Array de IDs de proyectos relacionados;
 };
 
 const TechModal: React.FC<TechModalProps> = ({
@@ -58,7 +58,7 @@ const TechModal: React.FC<TechModalProps> = ({
                         key={idx}
                         className="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-white"
                       >
-                        {proyecto}
+                        {proyecto.slug}
                       </span>
                     ))}
                   </div>

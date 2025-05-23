@@ -15,9 +15,14 @@ interface Tecnologia {
     public_id: string;
   };
   descripcion?: string;
-  rol?: string;
-  proyectos?: string[];
+  rol?: {
+    _id: string; 
+    nombre: string; 
+    descripcion: string
+  };
+  proyectos?: {_id: string; slug: string}[]; // Array de IDs de proyectos relacionados
 }
+
 
 interface Proyecto {
   _id: string;
@@ -25,6 +30,7 @@ interface Proyecto {
   descripcion: string;
   tecnologias: string[]; // o cualquier otro campo que tenga tu modelo
   imagen?: string; // si tenés imagen destacada del proyecto
+  slug: string;
 }
 
 export default function TechsPage() {

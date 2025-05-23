@@ -3,22 +3,56 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { tecnologiasPorRol } from "../app/(sitio)/proyectos/tecnologias";
 import TecnologiaCard from "../components/TecnologiaCard";
 import TechModal from "../components/TechModal"; // Asegurate de importar correctamente
 
-export default function TecnologiasSection() {
+interface Tecnologia {
+  _id: string;
+  nombre: string;
+  icono: {
+    url: string;
+    public_id: string;
+  };
+  descripcion?: string;
+  rol?: {
+    _id: string; 
+    nombre: string; 
+    descripcion: string
+  };
+  proyectos?: {_id: string; slug: string}[]; // Array de IDs de proyectos relacionados
+}
+
+interface TecnologiasSectionProps {
+  tecnologias: Tecnologia[];
+}
+
+
+export default function TecnologiasSection({ tecnologias }: Readonly<TecnologiasSectionProps>) {
   const [indiceRol, setIndiceRol] = useState(0);
-  const rolActual = tecnologiasPorRol[indiceRol];
+  const tecnologiasAgrupadas = agruparTecnologiasPorRol(tecnologias);
+const rolActual = tecnologiasAgrupadas[indiceRol];
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [tecnologiaSeleccionada, setTecnologiaSeleccionada] = useState<{
-    nombre: string;
-    descripcion: string;
-    proyectos: string[];
-  } | null>(null);
+  const [tecnologiaSeleccionada, setTecnologiaSeleccionada] = useState<Tecnologia | null>(null);
 
-  const abrirModal = (tec: { nombre: string; descripcion: string; proyectos: string[]}) => {
+  function agruparTecnologiasPorRol(tecnologias: Tecnologia[]) {
+  const mapa = new Map<string, { rol: string; tecnologias: Tecnologia[] }>();
+
+  tecnologias.forEach((tec) => {
+    const rolNombre = tec.rol?.nombre || "Sin rol asignado";
+
+    if (!mapa.has(rolNombre)) {
+      mapa.set(rolNombre, { rol: rolNombre, tecnologias: [] });
+    }
+
+    mapa.get(rolNombre)?.tecnologias.push(tec);
+  });
+
+  return Array.from(mapa.values());
+}
+
+
+  const abrirModal = (tec: Tecnologia) => {
     setTecnologiaSeleccionada(tec);
     setModalOpen(true);
   };
@@ -31,8 +65,8 @@ export default function TecnologiasSection() {
   const cambiarRol = (direccion: "anterior" | "siguiente") => {
     setIndiceRol((prev) =>
       direccion === "anterior"
-        ? (prev - 1 + tecnologiasPorRol.length) % tecnologiasPorRol.length
-        : (prev + 1) % tecnologiasPorRol.length
+        ? (prev - 1 + tecnologiasAgrupadas.length) % tecnologiasAgrupadas.length
+        : (prev + 1) % tecnologiasAgrupadas.length
     );
   };
 
@@ -66,9 +100,9 @@ export default function TecnologiasSection() {
                 <TecnologiaCard
                   key={tec.nombre}
                   nombre={tec.nombre}
-                  icono={tec.icono}
+                  icono={tec.icono.url}
                   onClick={() =>
-                    abrirModal({ nombre: tec.nombre, descripcion: tec.description, proyectos:tec.proyectos })
+                    abrirModal(tec)
                   }
                 />
               ))}
@@ -76,7 +110,7 @@ export default function TecnologiasSection() {
           </div>
 
           <p className="text-center text-sm text-white/70 mt-8">
-            {indiceRol + 1} / {tecnologiasPorRol.length}
+            {indiceRol + 1} / {tecnologiasAgrupadas.length}
           </p>
         </motion.div>
       </AnimatePresence>

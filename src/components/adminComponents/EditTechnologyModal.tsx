@@ -7,6 +7,7 @@ import Image from "next/image";
 interface Proyecto {
   _id: string;
   titulo: string;
+  slug: string;
 }
 
 interface EditTechnologyModalProps {
@@ -18,8 +19,12 @@ interface EditTechnologyModalProps {
       public_id: string;
     };
     descripcion?: string;
-    rol?: string;
-    proyectos?: string[];
+    rol?: {
+      _id: string;
+      nombre: string;
+      descripcion: string;
+    };
+    proyectos?: { _id: string; slug: string }[]; // Array de IDs de proyectos relacionados
   };
   roles: { _id: string; nombre: string }[];
   proyectos: Proyecto[];
@@ -33,13 +38,13 @@ export default function EditTechnologyModal({
   proyectos,
   onClose,
   onSuccess,
-}: EditTechnologyModalProps) {
+}: Readonly<EditTechnologyModalProps>) {
   const [nombre, setNombre] = useState(tech.nombre);
   const [descripcion, setDescripcion] = useState(tech.descripcion || "");
   const [newFile, setNewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [rolId, setRolId] = useState(tech.rol || "");
+  const [rolId, setRolId] = useState(tech.rol?._id || "");
   const [proyectosSeleccionados, setProyectosSeleccionados] = useState(
     tech.proyectos || []
   );
@@ -54,9 +59,20 @@ export default function EditTechnologyModal({
   };
 
   const handleProyectoChange = (id: string) => {
-    setProyectosSeleccionados((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
-    );
+    setProyectosSeleccionados((prev) => {
+      const yaExiste = prev.some((p) => p._id === id);
+      if (yaExiste) {
+        return prev.filter((p) => p._id !== id);
+      } else {
+        const nuevoProyecto = proyectos.find((p) => p._id === id);
+        // Asegurar que solo incluya las propiedades _id y slug
+        if (nuevoProyecto) {
+          const { _id, slug } = nuevoProyecto;
+          return [...prev, { _id, slug }];
+        }
+        return prev;
+      }
+    });
   };
 
   const handleUpdate = async () => {
@@ -202,9 +218,12 @@ export default function EditTechnologyModal({
                 </label>
                 <select
                   multiple
-                  value={proyectosSeleccionados}
+                  value={proyectosSeleccionados.map((p) => p._id)} // ← importante
                   onChange={(e) => {
-                    handleProyectoChange(e.target.value);
+                    const selectedId = Array.from(e.target.selectedOptions)
+                      .map((option) => option.value)
+                      .at(-1); // tomar solo el último seleccionado
+                    if (selectedId) handleProyectoChange(selectedId);
                   }}
                   className="w-full border rounded px-3 py-1.5 h-24"
                 >
@@ -220,10 +239,10 @@ export default function EditTechnologyModal({
                     <p className="text-xs font-medium mb-1">Seleccionados:</p>
                     <ul className="flex flex-wrap gap-2">
                       {proyectosSeleccionados.map((id) => {
-                        const p = proyectos.find((proj) => proj._id === id);
+                        const p = proyectos.find((proj) => proj._id === id._id);
                         return (
                           <li
-                            key={id}
+                            key={id._id}
                             className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs flex items-center gap-1"
                           >
                             {p?.titulo || "Proyecto desconocido"}

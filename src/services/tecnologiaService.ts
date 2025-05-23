@@ -1,12 +1,12 @@
 // services/tecnologiaService.ts
-
+import '@/models/Rol'
 import Tecnologia from '@/models/Tecnologia'
 import { connectToDatabase } from '@/lib/mongodb'
 import { TecnologiaType } from '@/types/Tecnologia'
 
 export const getTecnologias = async () => {
   await connectToDatabase()
-  return await Tecnologia.find()
+  return await Tecnologia.find().populate('rol','nombre descripcion').populate('proyectos', 'slug')
 }
 
 export const createTecnologia = async (data: TecnologiaType) => {

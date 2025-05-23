@@ -14,8 +14,12 @@ interface TechCardProps {
   };
   index: number;
   descripcion?: string;
-  rol?: string;
-  proyectos?: string[];
+  rol?: {
+    _id: string; 
+    nombre: string; 
+    descripcion: string
+  };
+  proyectos?: {_id: string; slug: string}[];
   onSuccess: () => void;
   onEdit: (tech: {
     id: string;
@@ -25,8 +29,12 @@ interface TechCardProps {
       public_id: string;
     };
     descripcion?: string;
-    rol?: string;
-    proyectos?: string[];
+    rol?: {
+    _id: string; 
+    nombre: string; 
+    descripcion: string
+  };
+    proyectos?: {_id: string; slug: string}[];
   }) => void;
 }
 

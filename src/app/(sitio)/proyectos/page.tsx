@@ -7,22 +7,41 @@ import TecnologiasSection from "@/components/TecnologiasSection";
 import SeccionBotonera from "@/components/SeccionBotonera";
 import DailyLog from "@/components/DailyLog";
 
-type TecnologiaType = {
+type TecnologiaTypeForProject = {
   nombre: string
 }
+
+interface TecnologiaType {
+  _id: string;
+  nombre: string;
+  icono: {
+    url: string;
+    public_id: string;
+  };
+  descripcion?: string;
+  rol?: {
+    _id: string; 
+    nombre: string; 
+    descripcion: string
+  };
+  proyectos?: {_id: string; slug: string}[]; // Array de IDs de proyectos relacionados
+}
+
 
 interface Proyecto {
   slug: string;
   titulo: string;
   descripcion: string;
   imagen: { url: string; public_id: string };
-  tecnologias: (string | TecnologiaType)[]
+  tecnologias: (string | TecnologiaTypeForProject)[]
 }
 
 export default function ProyectosPage() {
   const [seccionActual, setSeccionActual] = useState("proyectos");
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tecnologias, setTecnologias] = useState<TecnologiaType[]>([]);
+
 
   useEffect(() => {
     const fetchProyectos = async () => {
@@ -39,6 +58,23 @@ export default function ProyectosPage() {
 
     fetchProyectos();
   }, []);
+
+  useEffect(() => {
+  const fetchTecnologias = async () => {
+    try {
+      const res = await fetch("/api/tecnologias");
+      if (!res.ok) throw new Error("Error al obtener tecnologías");
+      const data = await res.json();
+      setTecnologias(data);
+      console.log(data)
+    } catch (error) {
+      console.error("Error al obtener tecnologías:", error);
+    }
+  };
+
+  fetchTecnologias();
+}, []);
+
 
   const renderSeccion = () => {
     switch (seccionActual) {
@@ -67,7 +103,8 @@ export default function ProyectosPage() {
           </div>
         );
       case "tecnologias":
-        return <TecnologiasSection />;
+  return <TecnologiasSection tecnologias={tecnologias} />;
+
       case "bitacora":
         return <DailyLog />;
       default:
