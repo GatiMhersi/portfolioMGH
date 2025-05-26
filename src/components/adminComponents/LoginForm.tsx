@@ -30,8 +30,9 @@ const LoginForm = () => {
 
       toast.success('Inicio de sesión exitoso')
       router.push('/dashboard') // redirige a tu panel de administración
-    } catch (err: any) {
-      toast.error(err.message)
+    } catch (err: unknown) {
+      const errorMessege = err instanceof Error ? err.message : "error desconocido"
+      toast.error(errorMessege)
     } finally {
       setLoading(false)
     }

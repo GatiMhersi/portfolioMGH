@@ -18,8 +18,9 @@ export const handleRegister = async (req: Request) => {
     return new Response(JSON.stringify(result), {
       status: 201,
     });
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 400,
     });
   }
@@ -46,8 +47,9 @@ export const handleLogin = async (req: Request) => {
     });
 
     return response;
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido'
+    return NextResponse.json({ error: errorMessage }, { status: 401 });
   }
 };
 
