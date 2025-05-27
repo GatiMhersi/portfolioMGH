@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 const navItems = [
   { label: "Inicio", href: "/" },
   { label: "Proyectos", href: "/proyectos" },
-  { label: "Sobre mí", href: "/sobre-mi" },
   { label: "Contacto", href: "/contacto" },
 ];
 
@@ -32,7 +31,7 @@ export default function Navbar() {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="fixed top-0 left-0 w-full z-50 px-6 py-4 backdrop-blur-lg bg-white/10 border-b border-white/20 shadow-sm"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-2 items-center justify-between">
         <Link href="/" className="text-2xl font-bold text-[#F2613F]">
           MatiGhersiDev
         </Link>
@@ -40,7 +39,7 @@ export default function Navbar() {
           {navItems.map((item) => (
             <li
               key={item.href}
-              className="hover:text-[#F2613F] transition-colors duration-300"
+              className="hover:text-[#F2613F] text-center transition-colors duration-300 md:border-none  border-[1px] py-1 px-2 rounded-2xl w-24"
             >
               <Link
                 href={item.href}

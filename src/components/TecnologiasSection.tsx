@@ -71,11 +71,11 @@ const rolActual = tecnologiasAgrupadas[indiceRol];
   };
 
   return (
-    <section className="h-full w-1/2 flex items-center justify-center relative px-4">
+    <section className="overflow-x-hidden md:overflow-x-visible h-full w-full md:w-1/2 flex items-center justify-center relative px-4">
       {/* Botón Izquierda */}
       <button
         onClick={() => cambiarRol("anterior")}
-        className="absolute -left-10 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/20 hover:bg-white/30 rounded-full"
+        className="absolute md:-left-10 left-10 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/20 hover:bg-white/30 rounded-full"
       >
         <ChevronLeft size={32} className="text-white" />
       </button>
@@ -118,7 +118,7 @@ const rolActual = tecnologiasAgrupadas[indiceRol];
       {/* Botón Derecha */}
       <button
         onClick={() => cambiarRol("siguiente")}
-        className="absolute -right-10 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/20 hover:bg-white/30 rounded-full"
+        className="absolute md:-right-10 right-10 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/20 hover:bg-white/30 rounded-full"
       >
         <ChevronRight size={32} className="text-white" />
       </button>

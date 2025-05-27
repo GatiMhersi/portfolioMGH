@@ -45,6 +45,7 @@ export default function ProjectCard({
         delay: index * 0.2,
         ease: "easeOut",
       }}
+      className="w-full"
     >
       <Link
         href={`/proyectos/${slug}`}

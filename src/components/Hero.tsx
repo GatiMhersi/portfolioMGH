@@ -19,7 +19,7 @@ export default function Hero() {
           transition={{ delay: 0.6, duration: 0.6 }}
           className="drop-shadow-2xl drop-shadow-orange-700 w-64 h-64 md:w-80 md:h-auto"
         >
-          <div className="relative w-80 h-80">
+          <div className="relative m-auto md:w-80 md:h-80 h-64 w-64">
             <Image
               src="/avatar.png"
               alt="Imagen de Matías"

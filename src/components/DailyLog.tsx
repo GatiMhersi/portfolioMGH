@@ -55,13 +55,13 @@ const DailyLog: React.FC<DailyLogProps> = ({ data, proyectos }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative z-10 bg-white/10 backdrop-blur-lg rounded-2xl p-8 w-1/2 h-full flex flex-col justify-between shadow-xl"
+      className="overflow-hidden md:overflow-visible relative z-10 bg-white/10 backdrop-blur-lg rounded-2xl p-8 w-full md:w-1/2 h-full flex flex-col justify-between shadow-xl"
     >
       {/* Flechas */}
       {selectedDateIndex > 0 && (
         <button
           onClick={() => cambiarDia("anterior")}
-          className="absolute -left-20 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/20 hover:bg-white/30 rounded-full"
+          className="absolute md:-left-20 left-10 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/20 hover:bg-white/30 rounded-full"
         >
           <ChevronLeft size={32} className="text-white" />
         </button>
@@ -69,7 +69,7 @@ const DailyLog: React.FC<DailyLogProps> = ({ data, proyectos }) => {
       {selectedDateIndex < availableDates.length - 1 && (
         <button
           onClick={() => cambiarDia("siguiente")}
-          className="absolute -right-20 top-1/2 -translate-y-1/2 z-50 p-2 bg-white/20 hover:bg-white/30 rounded-full"
+          className="absolute md:-right-20 right-10 top-1/2 -translate-y-1/2 z-50 p-2 bg-white/20 hover:bg-white/30 rounded-full"
         >
           <ChevronRight size={32} className="text-white" />
         </button>
