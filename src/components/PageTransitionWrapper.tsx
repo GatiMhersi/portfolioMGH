@@ -17,14 +17,18 @@ export default function PageTransitionWrapper({
   // Cuando cambian los children y no estamos animando, se actualiza el contenido
   useEffect(() => {
     if (isAnimating) {
+      console.log("set isPageReady in false")
       setIsPageReady(false); // 🛡️ Activamos la barrera antes de cambiar el contenido
     }
   }, [isAnimating]);
 
   useEffect(() => {
+
     if (!isAnimating) {
       // 🛡️ Activamos la barrera antes de cambiar el contenido
+      console.log("set isPageReady in true")
       setIsPageReady(true);
+      console.log("set DisplayChildren in children")
       setDisplayChildren(children); // 🧩 Cargamos la nueva página
     }
   }, [children, pathname]);
@@ -39,10 +43,14 @@ export default function PageTransitionWrapper({
       const destination = url.pathname;
 
       if (destination !== pathname && url.origin === window.location.origin) {
+        console.log("set IsAnimating in true")
         setIsAnimating(true);
+        console.log("set TrensitionKey in " + anchor.href)
         setTransitionKey(anchor.href);
 
         setTimeout(() => {
+          console.log("End timeout")
+          console.log("set IsAnimating in false")
           setIsAnimating(false);
         }, 500); // Duración de la animación de salida
       }
