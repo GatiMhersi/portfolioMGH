@@ -1,5 +1,6 @@
 // services/tecnologiaService.ts
 import '@/models/Rol'
+import '@/models/Proyecto'
 import Tecnologia from '@/models/Tecnologia'
 import { connectToDatabase } from '@/lib/mongodb'
 import { TecnologiaType } from '@/types/Tecnologia'
