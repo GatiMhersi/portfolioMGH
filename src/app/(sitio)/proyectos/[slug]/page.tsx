@@ -46,7 +46,7 @@ export default async function ProyectoPage({
   if (!proyecto) return notFound();
 
   return (
-    <section className="min-h-screen px-6 py-12 bg-[#0C0C0C] text-white">
+    <section className="min-h-screen px-6 md:py-20 pt-28 bg-[#0C0C0C] text-white">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-[#F2613F] mb-4">
           {proyecto.titulo}
