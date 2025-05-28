@@ -31,7 +31,7 @@ export default function PageTransitionWrapper({
       console.log("set DisplayChildren in children")
       setDisplayChildren(children); // 🧩 Cargamos la nueva página
     }
-  }, [children, pathname]);
+  }, [children, pathname, isAnimating]);
 
   // Escuchamos los clics de navegación
   useEffect(() => {
