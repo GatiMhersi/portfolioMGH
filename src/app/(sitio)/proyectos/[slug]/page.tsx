@@ -4,6 +4,10 @@ import Image from "next/image";
 import Proyecto from "@/models/Proyecto";
 import "@/models/Tecnologia"; // para registrar el modelo
 import { connectToDatabase } from "@/lib/mongodb";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw"; // solo si quieres permitir HTML en el markdown
+import { markdownComponents } from "@/lib/MarkdownComponents";
 
 // Generador de rutas estáticas en build time
 export async function generateStaticParams() {
@@ -14,11 +18,9 @@ export async function generateStaticParams() {
   }));
 }
 
-
-
 type TecnologiaType = {
-  nombre: string
-}
+  nombre: string;
+};
 
 interface Proyecto {
   slug: string;
@@ -26,15 +28,17 @@ interface Proyecto {
   descripcion: string;
   detalles: string;
   imagen: { url: string; public_id: string };
-  tecnologias: (string | TecnologiaType)[]
+  tecnologias: (string | TecnologiaType)[];
 }
 
 export default async function ProyectoPage({
   params,
-}: {params: Promise<{slug:string}>} ) {
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   await connectToDatabase();
-  const { slug } = await params
-  const proyecto:Proyecto = await Proyecto.findOne({ slug: slug }).populate(
+  const { slug } = await params;
+  const proyecto: Proyecto = await Proyecto.findOne({ slug: slug }).populate(
     "tecnologias",
     "nombre"
   );
@@ -61,9 +65,15 @@ export default async function ProyectoPage({
           />
         </div>
 
-        <p className="text-gray-400 text-md mb-6 leading-relaxed">
-          {proyecto.detalles}
-        </p>
+        <article className="prose prose-invert prose-neutral max-w-none text-gray-200 mb-6">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]} // opcional, solo si usás HTML embebido
+            components={markdownComponents}
+          >
+            {proyecto.detalles}
+          </ReactMarkdown>
+        </article>
 
         <h2 className="text-xl font-semibold text-[#9B3922] mb-2">
           Tecnologías utilizadas:

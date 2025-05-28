@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const navItems = [
   { label: "Inicio", href: "/" },
@@ -12,13 +12,13 @@ const navItems = [
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     href: string
   ) => {
     e.preventDefault();
-
     setTimeout(() => {
       router.push(href);
     }, 500);
@@ -36,19 +36,24 @@ export default function Navbar() {
           MatiGhersiDev
         </Link>
         <ul className="flex gap-6 text-sm md:text-base font-medium text-white">
-          {navItems.map((item) => (
-            <li
-              key={item.href}
-              className="hover:text-[#F2613F] text-center transition-colors duration-300 md:border-none  border-[1px] py-1 px-2 rounded-2xl w-24"
-            >
-              <Link
-                href={item.href}
-                onClick={(e) => handleClick(e, item.href)}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <li
+                key={item.href}
+                className={`text-center transition-colors duration-300 md:border-none border-[1px] py-1 px-2 rounded-2xl w-24
+                  ${isActive ? "bg-[#F2613F] text-white" : "hover:text-[#F2613F]"}`}
               >
-                {item.label}
-              </Link>
-            </li>
-          ))}
+                <Link
+                  href={item.href}
+                  onClick={(e) => handleClick(e, item.href)}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </motion.nav>

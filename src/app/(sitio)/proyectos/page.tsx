@@ -55,6 +55,14 @@ export default function ProyectosPage() {
   const [dailyLogs, setDailyLogs] = useState<DailyLogType[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [proyectosPorPagina, setProyectosPorPagina] = useState(6);
+  const [botoneraHabilitada, setBotoneraHabilitada] = useState(false);
+
+  useEffect(() => {
+  if (!loading && tecnologias.length > 0 && dailyLogs.length > 0) {
+    setBotoneraHabilitada(true);
+  }
+}, [loading, tecnologias, dailyLogs]);
+
 
   useEffect(() => {
     const actualizarCantidadPorPantalla = () => {
@@ -227,6 +235,7 @@ export default function ProyectosPage() {
           <SeccionBotonera
             seccionActual={seccionActual}
             setSeccionActual={setSeccionActual}
+            deshabilitado={!botoneraHabilitada}
           />
         </motion.h1>
 
