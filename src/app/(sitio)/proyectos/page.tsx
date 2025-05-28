@@ -215,7 +215,7 @@ export default function ProyectosPage() {
   }
 
   return (
-    <section className="overflow-y-hidden h-screen px-6 py-10 pt-32 md:py-20 bg-gradient-to-r from-[#0C0C0C] via-[#481E14] to-[#9B3922] text-white">
+    <section key={"proyectos"} className="overflow-y-hidden h-screen px-6 py-10 pt-32 md:py-20 bg-gradient-to-r from-[#0C0C0C] via-[#481E14] to-[#9B3922] text-white">
       <div className="h-full max-w-7xl mx-auto flex flex-col items-center justify-start">
         <motion.h1
           className="text-4xl md:text-5xl font-bold text-center mb-2 text-[#F2613F]"
