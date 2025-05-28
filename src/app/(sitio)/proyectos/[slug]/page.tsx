@@ -33,9 +33,9 @@ interface Proyecto {
 
 export default async function ProyectoPage({
   params,
-}: {
+}: Readonly<{
   params: Promise<{ slug: string }>;
-}) {
+}>) {
   await connectToDatabase();
   const { slug } = await params;
   const proyecto: Proyecto = await Proyecto.findOne({ slug: slug }).populate(

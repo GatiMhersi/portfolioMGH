@@ -48,7 +48,7 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="mt-4 text-lg md:text-xl text-gray-300 max-w-xl"
           >
-            Desarrollador frontend creando experiencias digitales con estilo,
+            Desarrollador Web creando experiencias digitales con estilo,
             funcionalidad y detalle.
           </motion.p>
 

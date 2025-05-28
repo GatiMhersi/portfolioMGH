@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Matias Ghersinich - Dev",
-  description: "Tienda de ropa y productos de manicura",
+  description: "Desarrollador Web",
 };
 
 export default function RootLayout({
