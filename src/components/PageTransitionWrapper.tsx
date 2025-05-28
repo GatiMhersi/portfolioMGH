@@ -16,12 +16,8 @@ export default function PageTransitionWrapper({
 
   // Cuando cambian los children y no estamos animando, se actualiza el contenido
   useEffect(() => {
-    if (!isAnimating) {
+    if (isAnimating) {
       setIsPageReady(false); // 🛡️ Activamos la barrera antes de cambiar el contenido
-
-      /* requestAnimationFrame(() => {
-        setIsPageReady(true); // ✅ Quitamos la barrera una vez renderizado
-      }); */
     }
   }, [isAnimating]);
 
@@ -58,13 +54,7 @@ export default function PageTransitionWrapper({
 
   return (
     <div className="relative bg-[#0C0C0C] overflow-hidden">
-      {/* Barrera visual negra mientras la página no está lista */}
-      {/* {!isPageReady && <div className="fixed inset-0 bg-[#0C0C0C] z-40" />} */}
-
       <AnimatePresence mode="wait">
-        {/* {!isPageReady && (
-        <div className="fixed inset-0 bg-[#0C0C0C] z-40" />
-      )} */}
         <motion.div
           key={transitionKey}
           initial={{ opacity: 0 }}
@@ -77,49 +67,6 @@ export default function PageTransitionWrapper({
           )}
           {displayChildren}
         </motion.div>
-
-        {/* <motion.div
-          key={transitionKey}
-          initial={{ opacity: 0, filter: "blur(10px)" }}
-          animate={{ opacity: 1, filter: "blur(0px)" }}
-          exit={{ opacity: 0, filter: "blur(10px)" }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
-        >
-          {!isPageReady && (
-            <div className="fixed inset-0 bg-[#0C0C0C] z-40 pointer-events-none" />
-          )}
-          {displayChildren}
-        </motion.div> */}
-
-        {/* <motion.div
-          key={transitionKey}
-          initial={{
-            opacity: 0,
-            rotateY: -90,
-            transformPerspective: 1000, // importante para el efecto 3D
-          }}
-          animate={{
-            opacity: 1,
-            rotateY: 0,
-            transformPerspective: 1000,
-          }}
-          exit={{
-            opacity: 0,
-            rotateY: 90,
-            transformPerspective: 1000,
-          }}
-          transition={{
-            duration: 0.6,
-            ease: "easeInOut",
-          }}
-          className="relative"
-        >
-          {!isPageReady && (
-            <div className="fixed inset-0 bg-[#0C0C0C] z-40 pointer-events-none" />
-          )}
-
-          {displayChildren}
-        </motion.div> */}
       </AnimatePresence>
     </div>
   );
